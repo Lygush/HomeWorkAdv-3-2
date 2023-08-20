@@ -10,6 +10,15 @@ public:
         this->size = size;
     }
 
+    smart_array(const smart_array& arr) {
+        this->size = arr.size;
+        this->logical_index = arr.logical_index;
+        this->arr = new int[size];
+        for (int i{}; i < size; ++i) {
+            this->arr[i] = arr.arr[i];
+        }
+    }
+
     ~smart_array() {
         delete[] arr;
     }
@@ -34,14 +43,16 @@ public:
     }
 
     smart_array& operator=(const smart_array& arr) {
-        this->size = arr.size;
-        this->logical_index = arr.logical_index;
-        int* new_arr = new int[size];
-        for (int i{}; i < size; ++i) {
-            new_arr[i] = arr.arr[i];
+        if (this != &arr) {
+            this->size = arr.size;
+            this->logical_index = arr.logical_index;
+            int* new_arr = new int[size];
+            for (int i{}; i < size; ++i) {
+                new_arr[i] = arr.arr[i];
+            }
+            delete[] this->arr;
+            this->arr = new_arr;
         }
-        delete[] this-> arr;
-        this->arr = new_arr;
         return *this;
     }
 };
@@ -56,13 +67,15 @@ int main()
         std::cout << arr.get_element(0) << " ";
         std::cout << arr.get_element(1) << "\n";
 
-        smart_array new_array(2);
+        smart_array new_array(arr);
         new_array.add_element(44);
         new_array.add_element(34);
 
-        arr = new_array;
-        std::cout << arr.get_element(0) << " ";
-        std::cout << arr.get_element(1) << " ";
+        std::cout << new_array.get_element(0) << " ";
+        std::cout << new_array.get_element(1) << " ";
+        std::cout << new_array.get_element(2) << " ";
+        std::cout << new_array.get_element(3) << " ";
+        std::cout << new_array.get_element(4) << " ";   
     }
     catch (const std::exception& ex) {
         std::cout << ex.what() << std::endl;
